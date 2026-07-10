@@ -1,0 +1,295 @@
+/* =========================================================
+   ADMIN PANEL STYLESHEET
+   Reuses design tokens from css/style.css (loaded alongside this file).
+   Adds layout for the login screen, dashboard, tables, and forms.
+   ========================================================= */
+
+body.admin-body {
+  background-image: none;
+  background-color: var(--paper);
+}
+
+/* ---------- Admin top bar ---------- */
+.admin-bar {
+  background: var(--blueprint-deep);
+  color: var(--white);
+  padding: 1rem 0;
+}
+
+.admin-bar .container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.admin-bar .admin-logo {
+  font-family: var(--font-mono);
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+.admin-bar .admin-logo span {
+  color: var(--amber);
+}
+
+.admin-nav {
+  display: flex;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.admin-nav a {
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+  color: rgba(255, 255, 255, 0.75);
+  transition: color 0.2s ease;
+}
+
+.admin-nav a:hover,
+.admin-nav a.active {
+  color: var(--white);
+}
+
+/* ---------- Layout ---------- */
+.admin-main {
+  padding: 2.5rem 0 4rem;
+  min-height: 70vh;
+}
+
+.admin-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.admin-heading h1 {
+  font-family: var(--font-display);
+  font-size: 1.8rem;
+  color: var(--blueprint-deep);
+}
+
+/* ---------- Flash messages ---------- */
+.flash {
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  padding: 0.8rem 1rem;
+  border-radius: var(--radius);
+  margin-bottom: 1.5rem;
+}
+
+.flash.success {
+  background: #e3f5ea;
+  color: #1a7f4e;
+  border: 1px solid #b7e3c8;
+}
+
+.flash.error {
+  background: #fbe9e7;
+  color: #c0392b;
+  border: 1px solid #f2c2bc;
+}
+
+/* ---------- Login screen ---------- */
+.login-wrap {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+}
+
+.login-card {
+  width: 100%;
+  max-width: 380px;
+  background: var(--white);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 2.5rem;
+}
+
+.login-card .eyebrow {
+  justify-content: center;
+}
+
+.login-card h1 {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  text-align: center;
+  color: var(--blueprint-deep);
+  margin-bottom: 1.75rem;
+}
+
+/* ---------- Stat cards (dashboard) ---------- */
+.stat-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2.5rem;
+}
+
+.stat-card {
+  background: var(--white);
+  border: 1px dashed var(--line);
+  border-radius: var(--radius);
+  padding: 1.5rem;
+}
+
+.stat-card .stat-label {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--blueprint);
+  margin-bottom: 0.5rem;
+}
+
+.stat-card .stat-value {
+  font-family: var(--font-display);
+  font-size: 2.2rem;
+  color: var(--blueprint-deep);
+}
+
+/* ---------- Tables ---------- */
+.admin-table-wrap {
+  background: var(--white);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  overflow-x: auto;
+}
+
+table.admin-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 560px;
+}
+
+.admin-table th,
+.admin-table td {
+  text-align: left;
+  padding: 0.9rem 1.1rem;
+  border-bottom: 1px solid var(--line);
+  font-size: 0.9rem;
+}
+
+.admin-table th {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--blueprint);
+  background: var(--paper);
+}
+
+.admin-table tr:last-child td {
+  border-bottom: none;
+}
+
+.admin-table .row-actions {
+  display: flex;
+  gap: 0.8rem;
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+}
+
+.admin-table .row-actions a.delete-link {
+  color: #c0392b;
+}
+
+.unread-badge {
+  display: inline-block;
+  background: var(--amber);
+  color: var(--blueprint-deep);
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  padding: 0.15rem 0.5rem;
+  border-radius: var(--radius);
+  margin-left: 0.5rem;
+}
+
+.message-preview {
+  max-width: 320px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ---------- Forms ---------- */
+.admin-form {
+  background: var(--white);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 2rem;
+  max-width: 640px;
+}
+
+.admin-form .form-group {
+  margin-bottom: 1.2rem;
+}
+
+.admin-form label {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--blueprint);
+  margin-bottom: 0.4rem;
+}
+
+.admin-form input[type="text"],
+.admin-form input[type="url"],
+.admin-form input[type="number"],
+.admin-form input[type="password"],
+.admin-form textarea {
+  width: 100%;
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  padding: 0.75rem;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--paper);
+  color: var(--ink);
+}
+
+.admin-form input:focus,
+.admin-form textarea:focus {
+  outline: 2px solid var(--blueprint);
+  outline-offset: 1px;
+}
+
+.admin-form .hint {
+  font-size: 0.78rem;
+  color: var(--ink-soft);
+  margin-top: 0.3rem;
+}
+
+.admin-form .form-actions {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.btn-danger {
+  background: #c0392b;
+  color: var(--white);
+}
+
+.btn-danger:hover {
+  background: #a5321f;
+}
+
+.btn-sm {
+  padding: 0.6rem 1.2rem;
+  font-size: 0.8rem;
+}
+
+@media (max-width: 640px) {
+  .admin-form {
+    padding: 1.25rem;
+  }
+}

@@ -1,0 +1,1011 @@
+/* =========================================================
+   PORTFOLIO STYLESHEET
+   Design system: "Technical Blueprint"
+   - Paper background with faint drafting grid
+   - Monospace utility labels (dates, tags, spec numbers)
+   - Project cards styled like engineering schematics
+   ========================================================= */
+
+/* ---------- Design tokens ---------- */
+:root {
+  --paper: #faf9f4;
+  --paper-line: #e4e7eb;
+  --ink: #1c2321;
+  --ink-soft: #4a5259;
+  --blueprint: #2b4570;
+  --blueprint-deep: #14213d;
+  --amber: #e8a33d;
+  --amber-soft: #f6e3c2;
+  --line: #c9cdd3;
+  --white: #ffffff;
+
+  --font-display: "Space Grotesk", sans-serif;
+  --font-body: "Inter", sans-serif;
+  --font-mono: "JetBrains Mono", monospace;
+
+  --radius: 3px;
+  --max-width: 1080px;
+  --section-pad: 6rem;
+}
+
+/* ---------- Reset ---------- */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+body {
+  font-family: var(--font-body);
+  color: var(--ink);
+  background-color: var(--paper);
+  background-image:
+    linear-gradient(var(--paper-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--paper-line) 1px, transparent 1px);
+  background-size: 40px 40px;
+  line-height: 1.6;
+  font-size: 16px;
+  overflow-x: hidden;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+ul {
+  list-style: none;
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+button {
+  font-family: inherit;
+  cursor: pointer;
+  border: none;
+  background: none;
+}
+
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+textarea:focus-visible {
+  outline: 2px solid var(--amber);
+  outline-offset: 2px;
+}
+
+.container {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 0 1.5rem;
+}
+
+section {
+  padding: var(--section-pad) 0;
+  position: relative;
+}
+
+/* ---------- Corner bracket decoration (signature element) ---------- */
+.bracket {
+  position: relative;
+}
+
+.bracket::before,
+.bracket::after {
+  content: "";
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  border: 2px solid var(--blueprint);
+  opacity: 0.6;
+}
+
+.bracket::before {
+  top: -1px;
+  left: -1px;
+  border-right: none;
+  border-bottom: none;
+}
+
+.bracket::after {
+  bottom: -1px;
+  right: -1px;
+  border-left: none;
+  border-top: none;
+}
+
+/* ---------- Eyebrow / spec labels ---------- */
+.eyebrow {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--blueprint);
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-bottom: 0.75rem;
+}
+
+.eyebrow::before {
+  content: "";
+  width: 24px;
+  height: 1px;
+  background: var(--amber);
+}
+
+.section-heading {
+  font-family: var(--font-display);
+  font-size: clamp(1.8rem, 3vw, 2.4rem);
+  font-weight: 600;
+  margin-bottom: 2.5rem;
+  color: var(--blueprint-deep);
+}
+
+/* ---------- Navigation ---------- */
+.navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  background: var(--blueprint-deep);
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.15);
+}
+
+.nav-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.15rem 1.5rem;
+  max-width: var(--max-width);
+  margin: 0 auto;
+}
+
+.logo {
+  font-family: var(--font-mono);
+  font-weight: 700;
+  font-size: 1.3rem;
+  color: var(--white);
+  letter-spacing: 0.01em;
+}
+
+.logo span {
+  color: var(--amber);
+}
+
+.nav-links {
+  display: flex;
+  gap: 2rem;
+}
+
+.nav-links a {
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  letter-spacing: 0.03em;
+  color: rgba(255, 255, 255, 0.7);
+  position: relative;
+  padding-bottom: 4px;
+  transition: color 0.2s ease;
+}
+
+.nav-links a::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  height: 2px;
+  width: 0;
+  background: var(--amber);
+  transition: width 0.25s ease;
+}
+
+.nav-links a:hover,
+.nav-links a.active {
+  color: var(--white);
+}
+
+.nav-links a:hover::after,
+.nav-links a.active::after {
+  width: 100%;
+}
+
+.nav-toggle {
+  display: none;
+  flex-direction: column;
+  gap: 5px;
+  width: 26px;
+}
+
+.nav-toggle span {
+  height: 2px;
+  background: var(--white);
+  border-radius: 2px;
+  transition: transform 0.25s ease, opacity 0.25s ease;
+}
+
+/* ---------- Hero ---------- */
+.hero {
+  min-height: 92vh;
+  display: flex;
+  align-items: center;
+  padding-top: 6rem;
+}
+
+.hero-grid {
+  display: grid;
+  grid-template-columns: 1.3fr 0.7fr;
+  gap: 3rem;
+  align-items: center;
+}
+
+.hero-tag {
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  color: var(--blueprint);
+  background: var(--amber-soft);
+  display: inline-block;
+  padding: 0.35rem 0.75rem;
+  border-radius: var(--radius);
+  margin-bottom: 1.5rem;
+  letter-spacing: 0.03em;
+}
+
+.hero h1 {
+  font-family: var(--font-display);
+  font-size: clamp(2.6rem, 6vw, 4.2rem);
+  line-height: 1.05;
+  font-weight: 700;
+  color: var(--blueprint-deep);
+  margin-bottom: 1.2rem;
+}
+
+.hero h1 .accent {
+  color: var(--amber);
+}
+
+.hero p.lead {
+  font-size: 1.15rem;
+  color: var(--ink-soft);
+  max-width: 46ch;
+  margin-bottom: 2rem;
+}
+
+.hero-actions {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.btn {
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  padding: 0.85rem 1.6rem;
+  border-radius: var(--radius);
+  letter-spacing: 0.02em;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+}
+
+.btn-primary {
+  background: var(--blueprint-deep);
+  color: var(--white);
+}
+
+.btn-primary:hover {
+  background: var(--blueprint);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(20, 33, 61, 0.25);
+}
+
+.btn-outline {
+  border: 1.5px solid var(--blueprint-deep);
+  color: var(--blueprint-deep);
+}
+
+.btn-outline:hover {
+  background: var(--blueprint-deep);
+  color: var(--white);
+  transform: translateY(-2px);
+}
+
+.hero-schematic {
+  aspect-ratio: 1 / 1;
+  border: 1.5px dashed var(--line);
+  border-radius: var(--radius);
+  position: relative;
+  padding: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--white);
+}
+
+.hero-schematic img,
+.hero-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: var(--radius);
+  filter: grayscale(10%);
+}
+
+.hero-schematic .tag-tl,
+.hero-schematic .tag-br {
+  position: absolute;
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  color: var(--blueprint);
+  letter-spacing: 0.05em;
+}
+
+.hero-schematic .tag-tl {
+  top: 10px;
+  left: 14px;
+}
+
+.hero-schematic .tag-br {
+  bottom: 10px;
+  right: 14px;
+}
+
+/* ---------- About ---------- */
+.about-grid {
+  display: grid;
+  grid-template-columns: 0.9fr 1.4fr;
+  gap: 3rem;
+  align-items: start;
+}
+
+.about-photo {
+  border-radius: var(--radius);
+  overflow: hidden;
+  border: 1px solid var(--line);
+  aspect-ratio: 4/5;
+}
+
+.about-photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.about-text p {
+  color: var(--ink-soft);
+  margin-bottom: 1.1rem;
+  max-width: 62ch;
+}
+
+.quick-facts {
+  margin-top: 2rem;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem 2rem;
+  border-top: 1px solid var(--line);
+  padding-top: 1.5rem;
+}
+
+.quick-facts dt {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--blueprint);
+  margin-bottom: 0.2rem;
+}
+
+.quick-facts dd {
+  font-size: 0.95rem;
+  color: var(--ink);
+}
+
+/* ---------- Timeline v2 (alternating cards) ---------- */
+.timeline-v2 {
+  position: relative;
+  margin-top: 2rem;
+  padding: 0.5rem 0;
+}
+
+.timeline-v2::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: var(--line);
+  transform: translateX(-50%);
+}
+
+.timeline-entry {
+  position: relative;
+  display: flex;
+  width: 100%;
+  margin-bottom: 2.75rem;
+  opacity: 1;
+  transform: none;
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+/* Only elements JS has explicitly marked as reveal-init start hidden.
+   This means if JavaScript fails to load or run for any reason, content
+   is still fully visible by default - the fade-in is a bonus, not a
+   requirement. */
+.timeline-entry.reveal-init {
+  opacity: 0;
+  transform: translateY(16px);
+}
+
+.timeline-entry.in-view {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.timeline-entry--left {
+  justify-content: flex-start;
+}
+
+.timeline-entry--right {
+  justify-content: flex-end;
+}
+
+.timeline-marker {
+  position: absolute;
+  left: 50%;
+  top: 1.6rem;
+  transform: translate(-50%, 0);
+  width: 2.75rem;
+  height: 2.75rem;
+  border-radius: 50%;
+  background: var(--blueprint-deep);
+  color: var(--amber);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 3px solid var(--paper);
+  box-shadow: 0 0 0 1px var(--line);
+  z-index: 2;
+}
+
+.timeline-card {
+  width: 44%;
+  background: var(--white);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 1.5rem 1.75rem;
+  box-shadow: 0 2px 10px rgba(20, 33, 61, 0.04);
+  transition: box-shadow 0.25s ease, border-color 0.25s ease;
+}
+
+.timeline-card:hover {
+  box-shadow: 0 10px 24px rgba(20, 33, 61, 0.08);
+  border-color: var(--blueprint);
+}
+
+.timeline-card-head {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.9rem;
+  margin-bottom: 0.9rem;
+}
+
+.timeline-logo {
+  flex-shrink: 0;
+  width: 44px;
+  height: 44px;
+  border-radius: var(--radius);
+  background: var(--amber-soft);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.timeline-card-head h3 {
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  color: var(--blueprint-deep);
+  margin-bottom: 0.2rem;
+  line-height: 1.3;
+}
+
+.timeline-org {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  color: var(--blueprint);
+}
+
+.timeline-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.2rem;
+  margin-bottom: 1rem;
+}
+
+.timeline-meta span {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  color: var(--ink-soft);
+}
+
+.timeline-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  color: var(--blueprint);
+  padding: 0;
+  margin-bottom: 0.9rem;
+  cursor: pointer;
+  transition: color 0.2s ease;
+  list-style: none; /* hide default disclosure marker (Firefox) */
+}
+
+/* Hide default disclosure marker (Chrome/Safari/Edge) */
+.timeline-toggle::-webkit-details-marker {
+  display: none;
+}
+
+/* Hide default disclosure marker (some browsers implement ::marker on summary) */
+.timeline-toggle::marker {
+  content: "";
+  display: none;
+}
+
+.timeline-toggle:hover {
+  color: var(--amber);
+}
+
+.timeline-toggle .toggle-chevron {
+  transition: transform 0.25s ease;
+}
+
+/* Swap "Show More" / "Show Less" label and rotate the chevron based on
+   the <details> open state - pure CSS, no JavaScript required, so this
+   can never break due to a script failing to load. */
+.timeline-disclosure .label-less {
+  display: none;
+}
+
+.timeline-disclosure[open] .label-more {
+  display: none;
+}
+
+.timeline-disclosure[open] .label-less {
+  display: inline;
+}
+
+.timeline-disclosure[open] .toggle-chevron {
+  transform: rotate(180deg);
+}
+
+.timeline-details {
+  border-top: 1px dashed var(--line);
+  padding-top: 1rem;
+}
+
+.timeline-details p {
+  color: var(--ink-soft);
+  font-size: 0.92rem;
+  margin-bottom: 0;
+}
+
+@media (max-width: 760px) {
+  .timeline-v2::before {
+    left: 20px;
+  }
+
+  .timeline-entry,
+  .timeline-entry--left,
+  .timeline-entry--right {
+    justify-content: flex-start;
+    padding-left: 3rem;
+  }
+
+  .timeline-marker {
+    left: 20px;
+    top: 0.25rem;
+  }
+
+  .timeline-card {
+    width: 100%;
+  }
+}
+
+/* ---------- Projects ---------- */
+.filter-bar {
+  display: flex;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+  margin-bottom: 2.5rem;
+}
+
+.filter-btn {
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  padding: 0.5rem 1rem;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  color: var(--ink-soft);
+  background: var(--white);
+  transition: all 0.2s ease;
+}
+
+.filter-btn:hover {
+  border-color: var(--blueprint);
+  color: var(--blueprint-deep);
+}
+
+.filter-btn.active {
+  background: var(--blueprint-deep);
+  border-color: var(--blueprint-deep);
+  color: var(--white);
+}
+
+.project-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.75rem;
+}
+
+.project-card {
+  background: var(--white);
+  border: 1px dashed var(--line);
+  border-radius: var(--radius);
+  padding: 1.5rem;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  opacity: 1;
+  transform: none;
+  transition: opacity 0.5s ease, transform 0.5s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+}
+
+.project-card.reveal-init {
+  opacity: 0;
+  transform: translateY(16px);
+}
+
+.project-card.in-view {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.project-card:hover {
+  box-shadow: 0 10px 28px rgba(20, 33, 61, 0.1);
+  border-color: var(--blueprint);
+}
+
+.project-card.hidden {
+  display: none;
+}
+
+.project-spec {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: var(--amber);
+  letter-spacing: 0.06em;
+  margin-bottom: 0.75rem;
+}
+
+.project-thumb {
+  aspect-ratio: 16/10;
+  border-radius: var(--radius);
+  overflow: hidden;
+  margin-bottom: 1rem;
+  background: var(--paper);
+  border: 1px solid var(--line);
+}
+
+.project-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.project-card h3 {
+  font-family: var(--font-display);
+  font-size: 1.2rem;
+  color: var(--blueprint-deep);
+  margin-bottom: 0.5rem;
+}
+
+.project-card p {
+  color: var(--ink-soft);
+  font-size: 0.92rem;
+  margin-bottom: 1rem;
+  flex-grow: 1;
+}
+
+.tag-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-bottom: 1.2rem;
+}
+
+.tag-chip {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  padding: 0.25rem 0.55rem;
+  background: var(--amber-soft);
+  color: var(--blueprint-deep);
+  border-radius: var(--radius);
+}
+
+.project-links {
+  display: flex;
+  gap: 1.2rem;
+  border-top: 1px solid var(--line);
+  padding-top: 1rem;
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+}
+
+.project-links a {
+  color: var(--blueprint);
+  transition: color 0.2s ease;
+}
+
+.project-links a:hover {
+  color: var(--amber);
+}
+
+/* ---------- Skills ---------- */
+.skills-groups {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 2rem;
+}
+
+.skills-group h3 {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--blueprint);
+  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--line);
+}
+
+.skills-group ul {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.skills-group li {
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+  padding: 0.45rem 0.9rem;
+  background: var(--amber-soft);
+  color: var(--blueprint-deep);
+  border: 1px solid transparent;
+  border-radius: var(--radius);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.skills-group li:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px rgba(20, 33, 61, 0.1);
+}
+
+/* ---------- Contact ---------- */
+.contact-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 3rem;
+}
+
+.contact-info p {
+  color: var(--ink-soft);
+  max-width: 42ch;
+  margin-bottom: 1.5rem;
+}
+
+.contact-methods li {
+  margin-bottom: 0.9rem;
+  font-family: var(--font-mono);
+  font-size: 0.9rem;
+}
+
+.contact-methods a:hover {
+  color: var(--amber);
+}
+
+.contact-methods .label {
+  color: var(--blueprint);
+  display: inline-block;
+  min-width: 90px;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+form.contact-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.1rem;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.form-group label {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--blueprint);
+}
+
+.form-group input,
+.form-group textarea {
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  padding: 0.8rem;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--white);
+  color: var(--ink);
+  resize: vertical;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+  outline: 2px solid var(--blueprint);
+  outline-offset: 1px;
+}
+
+/* Honeypot field - hidden from real users */
+.hp-field {
+  position: absolute;
+  left: -9999px;
+  top: -9999px;
+}
+
+.form-status {
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  min-height: 1.2rem;
+  padding: 0.5rem 0;
+}
+
+.form-status.success {
+  color: #1a7f4e;
+}
+
+.form-status.error {
+  color: #c0392b;
+}
+
+.submit-btn {
+  align-self: flex-start;
+}
+
+.submit-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* ---------- Footer ---------- */
+footer {
+  padding: 3rem 0;
+  border-top: 1px solid var(--line);
+  text-align: center;
+}
+
+footer p {
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  color: var(--ink-soft);
+}
+
+.back-to-top {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: var(--blueprint-deep);
+  color: var(--white);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(10px);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  z-index: 900;
+}
+
+.back-to-top.visible {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0);
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 860px) {
+  .hero-grid,
+  .about-grid,
+  .contact-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .hero-schematic {
+    max-width: 320px;
+    margin: 0 auto;
+  }
+
+  .nav-links {
+    position: fixed;
+    top: 64px;
+    left: 0;
+    right: 0;
+    background: var(--blueprint-deep);
+    flex-direction: column;
+    padding: 1.5rem;
+    gap: 1.2rem;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+    transform: translateY(-120%);
+    transition: transform 0.3s ease;
+  }
+
+  .nav-links.open {
+    transform: translateY(0);
+  }
+
+  .nav-toggle {
+    display: flex;
+  }
+
+  .nav-toggle.open span:nth-child(1) {
+    transform: translateY(7px) rotate(45deg);
+  }
+  .nav-toggle.open span:nth-child(2) {
+    opacity: 0;
+  }
+  .nav-toggle.open span:nth-child(3) {
+    transform: translateY(-7px) rotate(-45deg);
+  }
+}
+
+@media (max-width: 500px) {
+  :root {
+    --section-pad: 4rem;
+  }
+  .quick-facts {
+    grid-template-columns: 1fr;
+  }
+}

@@ -1,0 +1,34 @@
+[
+  {
+    "title": "Task Manager App",
+    "description": "A drag-and-drop task board with user accounts, built to practice full-stack CRUD operations and session-based authentication.",
+    "tags": ["PHP", "MySQL", "JavaScript"],
+    "image": "assets/images/project-placeholder-1.svg",
+    "live": "https://example.com/task-manager",
+    "github": "https://github.com/yourusername/task-manager"
+  },
+  {
+    "title": "Weather Dashboard",
+    "description": "Pulls live weather data from a public API and displays a 5-day forecast with animated icons and unit toggling.",
+    "tags": ["JavaScript", "API", "CSS"],
+    "image": "assets/images/project-placeholder-2.svg",
+    "live": "https://example.com/weather-dashboard",
+    "github": "https://github.com/yourusername/weather-dashboard"
+  },
+  {
+    "title": "Recipe Sharing Site",
+    "description": "A community recipe board where users can submit, rate, and filter recipes by category, stored in a MySQL database.",
+    "tags": ["PHP", "MySQL", "HTML/CSS"],
+    "image": "assets/images/project-placeholder-3.svg",
+    "live": "",
+    "github": "https://github.com/yourusername/recipe-site"
+  },
+  {
+    "title": "Personal Budget Tracker",
+    "description": "Tracks income and expenses with category breakdowns and a simple chart view, using vanilla JS and localStorage-free state.",
+    "tags": ["JavaScript", "CSS"],
+    "image": "assets/images/project-placeholder-4.svg",
+    "live": "https://example.com/budget-tracker",
+    "github": "https://github.com/yourusername/budget-tracker"
+  }
+]
