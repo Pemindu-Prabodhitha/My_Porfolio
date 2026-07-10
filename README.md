@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Portfolio Website
 
 A personal portfolio site built with HTML, CSS, JavaScript, and PHP. Includes
@@ -232,3 +233,5 @@ layout. Every other field on the site is plain text only.
   that simply shows all content if it's unavailable.
 - Respects `prefers-reduced-motion` — animations are disabled for users who
   have that system setting turned on.
+  >>>>>>> 088799478d410e166b288284ea9808b913b7881f
+=======
