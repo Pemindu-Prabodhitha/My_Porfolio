@@ -221,7 +221,7 @@ sort($allTags);
       </p>
       <div class="hero-actions">
         <a href="#projects" class="btn btn-primary">View Projects</a>
-        <a href="<?php echo e($siteContent['resume_path']); ?>" class="btn btn-outline" download>Download Résumé</a>
+        <a href="<?php echo e($siteContent['resume_path']); ?>" class="btn btn-outline" download>Download CV</a>
       </div>
     </div>
     <div class="hero-schematic bracket">
@@ -235,10 +235,10 @@ sort($allTags);
 <!-- ============ ABOUT ============ -->
 <section id="about">
   <div class="container about-grid">
-    <div class="about-photo">
+    <div class="about-photo reveal-up">
       <img src="<?php echo c('about_photo'); ?>" alt="Profile picture" onerror="this.onerror=null;this.src='assets/images/about-placeholder.svg';">
     </div>
-    <div class="about-text">
+    <div class="about-text reveal-up">
       <span class="eyebrow">About Me</span>
       <h2 class="section-heading"><?php echo c('about_heading'); ?></h2>
       <p><?php echo nl2br(c('about_bio')); ?></p>
@@ -303,7 +303,7 @@ sort($allTags);
               </span>
             </div>
 
-            <details class="timeline-disclosure" <?php echo $i === 0 ? 'open' : ''; ?>>
+            <details class="timeline-disclosure">
               <summary class="timeline-toggle">
                 <span class="label-more">Show More</span>
                 <span class="label-less">Show Less</span>
@@ -390,19 +390,19 @@ sort($allTags);
 <!-- ============ CONTACT ============ -->
 <section id="contact">
   <div class="container contact-grid">
-    <div class="contact-info">
+    <div class="contact-info reveal-up">
       <span class="eyebrow">Get In Touch</span>
       <h2 class="section-heading">Let's work together</h2>
       <p><?php echo c('contact_intro'); ?></p>
       <ul class="contact-methods">
-        <li><span class="label">Email</span> <a href="mailto:<?php echo c('contact_email'); ?>"><?php echo c('contact_email'); ?></a></li>
-        <li><span class="label">GitHub</span> <a href="<?php echo c('contact_github'); ?>" target="_blank" rel="noopener"><?php echo c('contact_github'); ?></a></li>
-        <li><span class="label">LinkedIn</span> <a href="<?php echo c('contact_linkedin'); ?>" target="_blank" rel="noopener"><?php echo c('contact_linkedin'); ?></a></li>
-        <li><span class="label">WhatsApp</span> <a href="https://wa.me/<?php echo e(ltrim($siteContent['contact_whatsapp'], '+')); ?>" target="_blank" rel="noopener"><?php echo c('contact_whatsapp'); ?></a></li>
+        <li><span class="contact-icon"><a href="mailto:<?php echo c('contact_email'); ?>"><img src='assets/images/Mail Icon.jpg'></a></span><span class="label">Email</span> <a href="mailto:<?php echo c('contact_email'); ?>"><?php echo c('contact_email'); ?></a></li>
+        <li><span class="contact-icon"><a href="<?php echo c('contact_github'); ?>"><img src='assets/images/Download GitHub Logo, Git Hub Icon On White Background.jpg'></a></span><span class="label">GitHub</span> <a href="<?php echo c('contact_github'); ?>" target="_blank" rel="noopener"><?php echo c('contact_github'); ?></a></li>
+        <li><span class="contact-icon"><a href="<?php echo c('contact_linkedin'); ?>"><img src='assets/images/Square linkedin logo isolated on white background | Premium Vector.jpg'></a></span><span class="label">LinkedIn</span> <a href="<?php echo c('contact_linkedin'); ?>" target="_blank" rel="noopener"><?php echo c('contact_linkedin'); ?></a></li>
+        <li><span class="contact-icon"><a href="https://wa.me/<?php echo e(ltrim($siteContent['contact_whatsapp'], '+')); ?>"><img src='assets/images/иконка ватсап.jpg'></a></span><span class="label">WhatsApp</span> <a href="https://wa.me/<?php echo e(ltrim($siteContent['contact_whatsapp'], '+')); ?>" target="_blank" rel="noopener"><?php echo c('contact_whatsapp'); ?></a></li>
       </ul>
     </div>
 
-    <form class="contact-form" id="contactForm" novalidate>
+    <form class="contact-form reveal-up" id="contactForm" novalidate>
       <div class="form-group">
         <label for="name">Name</label>
         <input type="text" id="name" name="name" required autocomplete="name">
@@ -431,8 +431,15 @@ sort($allTags);
 
 <!-- ============ FOOTER ============ -->
 <footer>
+  <ul>
+    <li><a href="https://github.com/Pemindu-Prabodhitha"><img src='assets/images/Download GitHub Logo, Git Hub Icon On White Background.jpg' href="<?php echo c('contact_github'); ?>" target="_blank" rel="noopener"></a></li>
+    <li><a href="https://linkedin.com/in/pemindu-prabodhitha-378712307"><img src='assets/images/ -5.jpg'></a></li>
+    <li><a href="https://wa.me/94704282988"><img src='assets/images/иконка ватсап.jpg'></a></li>
+    <li><a href="https://www.facebook.com/share/198gf97GNH/?mibextid=wwXIfr"><img src='assets/images/Facebook Logo Icon Vector & Transparent PNG.jpg'></a></li>
+    <li><a href="https://www.instagram.com/_pemindu_?igsh=Z3RnMWxxc24wMHdh&utm_source=qr"><img src='assets/images/Kapwing_ Make a Video About Anything.jpg'></a></li>
+  </ul>
   <div class="container">
-    <p>&copy; <?php echo date('Y'); ?> | <?php echo c('footer_name'); ?>.</p>
+    <h6>&copy; <?php echo date('Y'); ?> <?php echo c('footer_name');?>.All Rights Reserved.</h6>
   </div>
 </footer>
 

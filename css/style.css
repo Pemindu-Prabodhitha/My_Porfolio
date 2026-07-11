@@ -55,9 +55,6 @@ body {
   font-family: var(--font-body);
   color: var(--ink);
   background-color: var(--paper);
-  background-image:
-    linear-gradient(var(--paper-line) 1px, transparent 1px),
-    linear-gradient(90deg, var(--paper-line) 1px, transparent 1px);
   background-size: 40px 40px;
   line-height: 1.6;
   font-size: 16px;
@@ -102,6 +99,26 @@ textarea:focus-visible {
 section {
   padding: var(--section-pad) 0;
   position: relative;
+}
+
+/* ---------- Generic scroll-reveal utility ----------
+   Apply .reveal-up to any element that should fade/slide in as it scrolls
+   into view. Fully visible by default (no JS required) - see js/main.js
+   for how 'reveal-init' and 'in-view' get toggled. */
+.reveal-up {
+  opacity: 1;
+  transform: none;
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+.reveal-up.reveal-init {
+  opacity: 0;
+  transform: translateY(18px);
+}
+
+.reveal-up.in-view {
+  opacity: 1;
+  transform: translateY(0);
 }
 
 /* ---------- Corner bracket decoration (signature element) ---------- */
@@ -170,21 +187,31 @@ section {
   z-index: 1000;
   background: var(--blueprint-deep);
   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.15);
+  transition: box-shadow 0.3s ease;
+}
+
+.navbar.is-scrolled {
+  box-shadow: 0 4px 22px rgba(0, 0, 0, 0.28);
 }
 
 .nav-inner {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 1.15rem 1.5rem;
+  padding: 1.75rem 1.5rem;
   max-width: var(--max-width);
   margin: 0 auto;
+  transition: padding 0.3s ease;
+}
+
+.navbar.is-scrolled .nav-inner {
+  padding: 0.85rem 1.5rem;
 }
 
 .logo {
   font-family: var(--font-mono);
   font-weight: 700;
-  font-size: 1.3rem;
+  font-size: 1.7rem;
   color: var(--white);
   letter-spacing: 0.01em;
 }
@@ -250,6 +277,35 @@ section {
   align-items: center;
   padding-top: 6rem;
 }
+
+/* Staggered entrance animation on page load. Pure CSS keyframes - runs
+   automatically as soon as the page paints, no JavaScript required, so
+   it can never fail to trigger. prefers-reduced-motion (see top of file)
+   collapses all animation durations to near-zero for users who want it. */
+@keyframes heroRise {
+  from {
+    opacity: 0;
+    transform: translateY(22px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.hero-tag,
+.hero h1,
+.hero p.lead,
+.hero-actions,
+.hero-schematic {
+  animation: heroRise 0.7s ease both;
+}
+
+.hero-tag { animation-delay: 0.05s; }
+.hero h1 { animation-delay: 0.15s; }
+.hero p.lead { animation-delay: 0.3s; }
+.hero-actions { animation-delay: 0.42s; }
+.hero-schematic { animation-delay: 0.25s; }
 
 .hero-grid {
   display: grid;
@@ -329,26 +385,12 @@ section {
   color: var(--white);
   transform: translateY(-2px);
 }
-
-.hero-schematic {
-  aspect-ratio: 1 / 1;
-  border: 1.5px dashed var(--line);
-  border-radius: var(--radius);
-  position: relative;
-  padding: 1.5rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: var(--white);
-}
-
 .hero-schematic img,
 .hero-img {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  border-radius: var(--radius);
-  filter: grayscale(10%);
+  border-radius: 30px;
 }
 
 .hero-schematic .tag-tl,
@@ -395,6 +437,7 @@ section {
   color: var(--ink-soft);
   margin-bottom: 1.1rem;
   max-width: 62ch;
+  white-space: pre-line;
 }
 
 .quick-facts {
@@ -450,16 +493,22 @@ section {
 
 /* Only elements JS has explicitly marked as reveal-init start hidden.
    This means if JavaScript fails to load or run for any reason, content
-   is still fully visible by default - the fade-in is a bonus, not a
-   requirement. */
-.timeline-entry.reveal-init {
+   is still fully visible by default - the slide-in is a bonus, not a
+   requirement. Left-side cards slide in from the left, right-side cards
+   slide in from the right, mirroring which side of the timeline they sit on. */
+.timeline-entry--left.reveal-init {
   opacity: 0;
-  transform: translateY(16px);
+  transform: translateX(-60px);
+}
+
+.timeline-entry--right.reveal-init {
+  opacity: 0;
+  transform: translateX(60px);
 }
 
 .timeline-entry.in-view {
   opacity: 1;
-  transform: translateY(0);
+  transform: translateX(0);
 }
 
 .timeline-entry--left {
@@ -474,7 +523,7 @@ section {
   position: absolute;
   left: 50%;
   top: 1.6rem;
-  transform: translate(-50%, 0);
+  transform: translate(-50%, 0) scale(1);
   width: 2.75rem;
   height: 2.75rem;
   border-radius: 50%;
@@ -486,6 +535,12 @@ section {
   border: 3px solid var(--paper);
   box-shadow: 0 0 0 1px var(--line);
   z-index: 2;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.timeline-entry:hover .timeline-marker {
+  transform: translate(-50%, 0) scale(1.12);
+  box-shadow: 0 0 0 1px var(--amber);
 }
 
 .timeline-card {
@@ -494,13 +549,13 @@ section {
   border: 1px solid var(--line);
   border-radius: var(--radius);
   padding: 1.5rem 1.75rem;
-  box-shadow: 0 2px 10px rgba(20, 33, 61, 0.04);
-  transition: box-shadow 0.25s ease, border-color 0.25s ease;
+  transition: box-shadow 0.3s ease, border-color 0.3s ease, transform 0.3s ease;
 }
 
-.timeline-card:hover {
-  box-shadow: 0 10px 24px rgba(20, 33, 61, 0.08);
-  border-color: var(--blueprint);
+.timeline-entry:hover .timeline-card {
+  box-shadow: 0 10px 26px rgba(20, 33, 61, 0.3);
+  border-color: var(--amber);
+  transform: translateY(-3px);
 }
 
 .timeline-card-head {
@@ -603,15 +658,38 @@ section {
   transform: rotate(180deg);
 }
 
+/* Smooth expand/collapse for the native <details> content.
+   Browsers hide <details> content abruptly by default (no animation
+   possible on a plain display:none toggle). This overrides that with a
+   grid-row trick: the row height animates from 0fr to 1fr, so the content
+   smoothly grows/shrinks instead of snapping open - and everything below
+   it (other timeline cards) reflows smoothly along with it, since the
+   parent's height changes gradually rather than in one jump.
+   The !important defeats the browser's default "display: none when
+   closed" rule for <details> content, which would otherwise skip our
+   animation entirely. */
 .timeline-details {
-  border-top: 1px dashed var(--line);
-  padding-top: 1rem;
+  display: grid !important;
+  grid-template-rows: 0fr;
+  overflow: hidden;
+  opacity: 0;
+  transition: grid-template-rows 0.35s ease, opacity 0.3s ease;
+}
+
+.timeline-disclosure[open] .timeline-details {
+  grid-template-rows: 1fr;
+  opacity: 1;
 }
 
 .timeline-details p {
+  overflow: hidden;
+  min-height: 0;
   color: var(--ink-soft);
   font-size: 0.92rem;
   margin-bottom: 0;
+  white-space: pre-line;
+  border-top: 1px dashed var(--line);
+  padding-top: 1rem;
 }
 
 @media (max-width: 760px) {
@@ -633,6 +711,14 @@ section {
 
   .timeline-card {
     width: 100%;
+  }
+
+  /* Single-column layout on mobile - use a simple fade-up instead of the
+     alternating left/right slide, since the left/right distinction no
+     longer has visual meaning once everything stacks in one column. */
+  .timeline-entry--left.reveal-init,
+  .timeline-entry--right.reveal-init {
+    transform: translateY(18px);
   }
 }
 
@@ -674,7 +760,7 @@ section {
 
 .project-card {
   background: var(--white);
-  border: 1px dashed var(--line);
+  border: 3px;
   border-radius: var(--radius);
   padding: 1.5rem;
   position: relative;
@@ -696,7 +782,7 @@ section {
 }
 
 .project-card:hover {
-  box-shadow: 0 10px 28px rgba(20, 33, 61, 0.1);
+  box-shadow: 0 10px 28px rgba(20, 33, 61, 0.3);
   border-color: var(--blueprint);
 }
 
@@ -725,6 +811,11 @@ section {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  transition: transform 0.4s ease;
+}
+
+.project-card:hover .project-thumb img {
+  transform: scale(1.06);
 }
 
 .project-card h3 {
@@ -739,6 +830,7 @@ section {
   font-size: 0.92rem;
   margin-bottom: 1rem;
   flex-grow: 1;
+  white-space: pre-line;
 }
 
 .tag-list {
@@ -780,6 +872,22 @@ section {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
   gap: 2rem;
+}
+
+.skills-group {
+  opacity: 1;
+  transform: none;
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+.skills-group.reveal-init {
+  opacity: 0;
+  transform: translateY(16px);
+}
+
+.skills-group.in-view {
+  opacity: 1;
+  transform: translateY(0);
 }
 
 .skills-group h3 {
@@ -832,6 +940,8 @@ section {
   margin-bottom: 0.9rem;
   font-family: var(--font-mono);
   font-size: 0.9rem;
+  display: flex;
+  align-items: center;
 }
 
 .contact-methods a:hover {
@@ -845,6 +955,7 @@ section {
   font-size: 0.75rem;
   text-transform: uppercase;
   letter-spacing: 0.05em;
+  margin-left: 10px;
 }
 
 form.contact-form {
@@ -885,6 +996,13 @@ form.contact-form {
   outline-offset: 1px;
 }
 
+.contact-icon img{
+  height:25px;
+  width: 25px;
+  margin-right: 10px;
+  border-radius: 10px;
+}
+
 /* Honeypot field - hidden from real users */
 .hp-field {
   position: absolute;
@@ -921,12 +1039,33 @@ footer {
   padding: 3rem 0;
   border-top: 1px solid var(--line);
   text-align: center;
+  align-items: center;
+  background-color: #14213d;
+  display: flex;
 }
-
-footer p {
+footer ul{
+  display: flex;
+  gap: 10px;
+  padding-left: 50px;
+  align-items: center;
+}
+footer ul li{
+  width: 25px;
+  height: 25px;
+  align-items: center;
+  opacity: 60%;
+}
+footer ul li:hover{
+  opacity: 100%;
+}
+footer ul li img{
+  border-radius: 100%;
+}
+footer h6 {
   font-family: var(--font-mono);
   font-size: 0.78rem;
   color: var(--ink-soft);
+  margin-left: -200px;
 }
 
 .back-to-top {

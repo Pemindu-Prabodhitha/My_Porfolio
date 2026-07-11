@@ -2,7 +2,9 @@
    PORTFOLIO SCRIPT
    - Mobile nav toggle
    - Active nav-link highlighting on scroll
-   - Scroll-reveal for timeline items and project cards
+   - Scroll-reveal for section content (JS-independent - visible by
+     default, animation is a progressive enhancement only)
+   - Navbar scroll shadow
    - Project filtering by tag
    - Back-to-top button
    - Contact form validation + async submit to php/contact.php
@@ -51,14 +53,16 @@ document.addEventListener('DOMContentLoaded', () => {
   window.addEventListener('scroll', highlightNav);
   highlightNav();
 
-  /* ---------- Scroll-reveal (timeline + project cards) ----------
+  /* ---------- Scroll-reveal (section content) ----------
      Content is fully visible by default in CSS (no JS required to see it).
      Only if IntersectionObserver is available do we add the 'reveal-init'
      class to fade elements out, then fade them back in as they scroll into
      view. If this script fails to load or run for any reason, visitors
      still see all content immediately - the animation is a bonus, not a
      requirement. */
-  const revealTargets = document.querySelectorAll('.timeline-entry, .project-card');
+  const revealTargets = document.querySelectorAll(
+    '.timeline-entry, .project-card, .reveal-up, .skills-group'
+  );
 
   if ('IntersectionObserver' in window) {
     revealTargets.forEach(target => target.classList.add('reveal-init'));
@@ -82,6 +86,18 @@ document.addEventListener('DOMContentLoaded', () => {
     }, 2000);
   }
   // No 'else' needed - targets are already visible by default via CSS.
+
+  /* ---------- Navbar scroll shadow ----------
+     Purely cosmetic - if this never runs, the navbar just keeps its
+     default resting appearance, nothing breaks. */
+  const navbar = document.querySelector('.navbar');
+  if (navbar) {
+    const updateNavbarShadow = () => {
+      navbar.classList.toggle('is-scrolled', window.scrollY > 12);
+    };
+    window.addEventListener('scroll', updateNavbarShadow);
+    updateNavbarShadow();
+  }
 
   /* ---------- Project filtering ---------- */
   const filterBar = document.getElementById('filterBar');
