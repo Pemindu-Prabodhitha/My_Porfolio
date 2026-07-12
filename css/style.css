@@ -908,19 +908,30 @@ section {
 }
 
 .skills-group li {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
   font-family: var(--font-mono);
   font-size: 0.82rem;
-  padding: 0.45rem 0.9rem;
-  background: var(--amber-soft);
+  padding: 0.45rem 0.9rem 0.45rem 0.65rem;
+  background: var(--white);
   color: var(--blueprint-deep);
-  border: 1px solid transparent;
+  border: 1px solid var(--line);
   border-radius: var(--radius);
-  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
 }
 
 .skills-group li:hover {
   transform: translateY(-2px);
   box-shadow: 0 4px 10px rgba(20, 33, 61, 0.1);
+  border-color: var(--blueprint);
+}
+
+.skill-icon {
+  width: 20px;
+  height: 20px;
+  object-fit: contain;
+  flex-shrink: 0;
 }
 
 /* ---------- Contact ---------- */

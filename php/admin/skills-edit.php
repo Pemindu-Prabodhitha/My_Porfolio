@@ -9,12 +9,14 @@ $isEdit = $id !== null;
 $skill = [
     'category' => '',
     'skill_name' => '',
+    'icon' => '',
     'category_order' => 0,
     'sort_order' => 0,
 ];
 
 $errors = [];
 $existingCategories = [];
+$availableIcons = [];
 
 if ($pdo === null) {
     $errors[] = 'Database is not connected. Check php/config.php.';
@@ -25,6 +27,17 @@ if ($pdo === null) {
     } catch (PDOException $e) {
         // non-fatal, just means the datalist suggestion list is empty
     }
+}
+
+// Scan the bundled icons folder so the admin can pick from what's already
+// available, without needing to know exact file paths by heart.
+$iconsDir = __DIR__ . '/../../assets/icons';
+if (is_dir($iconsDir)) {
+    $files = glob($iconsDir . '/*.svg');
+    foreach ($files as $file) {
+        $availableIcons[] = 'assets/icons/' . basename($file);
+    }
+    sort($availableIcons);
 }
 
 if ($isEdit && $pdo !== null) {
@@ -51,6 +64,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } else {
         $skill['category'] = trim($_POST['category'] ?? '');
         $skill['skill_name'] = trim($_POST['skill_name'] ?? '');
+        $skill['icon'] = trim($_POST['icon'] ?? '');
         $skill['category_order'] = (int) ($_POST['category_order'] ?? 0);
         $skill['sort_order'] = (int) ($_POST['sort_order'] ?? 0);
 
@@ -60,17 +74,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if ($skill['skill_name'] === '' || strlen($skill['skill_name']) > 100) {
             $errors[] = 'Skill name is required (max 100 characters).';
         }
+        if (strlen($skill['icon']) > 255) {
+            $errors[] = 'Icon path is too long (max 255 characters).';
+        }
 
         if (empty($errors) && $pdo !== null) {
             try {
                 if ($isEdit) {
                     $stmt = $pdo->prepare(
-                        'UPDATE skills SET category=:category, skill_name=:skill_name,
+                        'UPDATE skills SET category=:category, skill_name=:skill_name, icon=:icon,
                          category_order=:category_order, sort_order=:sort_order WHERE id=:id'
                     );
                     $stmt->execute([
                         ':category' => $skill['category'],
                         ':skill_name' => $skill['skill_name'],
+                        ':icon' => $skill['icon'] ?: null,
                         ':category_order' => $skill['category_order'],
                         ':sort_order' => $skill['sort_order'],
                         ':id' => $id,
@@ -79,12 +97,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     exit;
                 } else {
                     $stmt = $pdo->prepare(
-                        'INSERT INTO skills (category, skill_name, category_order, sort_order)
-                         VALUES (:category, :skill_name, :category_order, :sort_order)'
+                        'INSERT INTO skills (category, skill_name, icon, category_order, sort_order)
+                         VALUES (:category, :skill_name, :icon, :category_order, :sort_order)'
                     );
                     $stmt->execute([
                         ':category' => $skill['category'],
                         ':skill_name' => $skill['skill_name'],
+                        ':icon' => $skill['icon'] ?: null,
                         ':category_order' => $skill['category_order'],
                         ':sort_order' => $skill['sort_order'],
                     ]);
@@ -130,6 +149,28 @@ include __DIR__ . '/_header.php';
   <div class="form-group">
     <label for="skill_name">Skill Name</label>
     <input type="text" id="skill_name" name="skill_name" value="<?php echo e($skill['skill_name']); ?>" placeholder="e.g. JavaScript" required>
+  </div>
+
+  <div class="form-group">
+    <label for="icon">Icon / Logo (optional)</label>
+    <div style="display:flex; align-items:center; gap:0.75rem;">
+      <img id="iconPreview" src="<?php echo e($skill['icon'] ?: ''); ?>" alt=""
+           style="width:32px;height:32px;object-fit:contain;flex-shrink:0;<?php echo $skill['icon'] ? '' : 'display:none;'; ?>"
+           onerror="this.style.display='none';">
+      <input type="text" id="icon" name="icon" value="<?php echo e($skill['icon']); ?>" list="iconList"
+             placeholder="assets/icons/javascript.svg" style="flex:1;"
+             oninput="var p=document.getElementById('iconPreview'); if(this.value){p.src=this.value;p.style.display='';} else {p.style.display='none';}">
+    </div>
+    <datalist id="iconList">
+      <?php foreach ($availableIcons as $iconPath): ?>
+        <option value="<?php echo e($iconPath); ?>">
+      <?php endforeach; ?>
+    </datalist>
+    <p class="hint">
+      Pick one of the bundled logos above, or type a path to your own icon
+      (SVG or PNG) uploaded into <code>assets/icons/</code>. Leave blank for
+      no icon.
+    </p>
   </div>
 
   <div class="form-group">

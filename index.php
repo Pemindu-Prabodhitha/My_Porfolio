@@ -97,13 +97,31 @@ if ($pdo !== null) {
 }
 
 // ---------------------------------------------------------------------
-// Skills, grouped by category
+// Skills, grouped by category. Each skill is ['name' => ..., 'icon' => ...]
 // ---------------------------------------------------------------------
 $skillsDefaults = [
-    'Frontend' => ['HTML5', 'CSS3', 'JavaScript', 'Responsive Design'],
-    'Backend' => ['PHP', 'MySQL', 'REST APIs'],
-    'Tools' => ['Git & GitHub', 'VS Code', 'Figma'],
-    'Statistics' => ['R Programming', 'Power BI', 'MS Excel'],
+    'Frontend' => [
+        ['name' => 'HTML5', 'icon' => 'assets/icons/html5.svg'],
+        ['name' => 'CSS3', 'icon' => 'assets/icons/css3.svg'],
+        ['name' => 'JavaScript', 'icon' => 'assets/icons/javascript.svg'],
+        ['name' => 'Responsive Design', 'icon' => 'assets/icons/responsive.svg'],
+    ],
+    'Backend' => [
+        ['name' => 'PHP', 'icon' => 'assets/icons/php.svg'],
+        ['name' => 'MySQL', 'icon' => 'assets/icons/mysql.svg'],
+        ['name' => 'REST APIs', 'icon' => 'assets/icons/rest-api.svg'],
+    ],
+    'Tools' => [
+        ['name' => 'Git', 'icon' => 'assets/icons/git.svg'],
+        ['name' => 'GitHub', 'icon' => 'assets/icons/github.svg'],
+        ['name' => 'VS Code', 'icon' => 'assets/icons/vscode.svg'],
+        ['name' => 'Figma', 'icon' => 'assets/icons/figma.svg'],
+    ],
+    'Statistics' => [
+        ['name' => 'R Programming', 'icon' => 'assets/icons/r-lang.svg'],
+        ['name' => 'Power BI', 'icon' => 'assets/icons/bi-dashboard.svg'],
+        ['name' => 'MS Excel', 'icon' => 'assets/icons/spreadsheet.svg'],
+    ],
 ];
 
 $skillsByCategory = $skillsDefaults;
@@ -114,7 +132,10 @@ if ($pdo !== null) {
         if (!empty($rows)) {
             $skillsByCategory = [];
             foreach ($rows as $row) {
-                $skillsByCategory[$row['category']][] = $row['skill_name'];
+                $skillsByCategory[$row['category']][] = [
+                    'name' => $row['skill_name'],
+                    'icon' => $row['icon'] ?? '',
+                ];
             }
         }
     } catch (PDOException $e) {
@@ -378,7 +399,24 @@ sort($allTags);
           <h3><?php echo e($category); ?></h3>
           <ul>
             <?php foreach ($skillList as $skill): ?>
-              <li><?php echo e($skill); ?></li>
+              <?php
+                // Support both the new ['name'=>..,'icon'=>..] shape and a
+                // plain string, in case older custom data is still around.
+                $skillName = is_array($skill) ? $skill['name'] : $skill;
+                $skillIcon = is_array($skill) ? ($skill['icon'] ?? '') : '';
+              ?>
+              <li>
+                <?php if (!empty($skillIcon)): ?>
+                  <img
+                    src="<?php echo e($skillIcon); ?>"
+                    alt=""
+                    class="skill-icon"
+                    loading="lazy"
+                    onerror="this.style.display='none';"
+                  >
+                <?php endif; ?>
+                <span><?php echo e($skillName); ?></span>
+              </li>
             <?php endforeach; ?>
           </ul>
         </div>

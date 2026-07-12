@@ -48,6 +48,7 @@ include __DIR__ . '/_header.php';
     <table class="admin-table">
       <thead>
         <tr>
+          <th>Icon</th>
           <th>Category</th>
           <th>Skill</th>
           <th>Order</th>
@@ -57,6 +58,15 @@ include __DIR__ . '/_header.php';
       <tbody>
         <?php foreach ($skills as $skill): ?>
           <tr>
+            <td>
+              <?php if (!empty($skill['icon'])): ?>
+                <img src="../../<?php echo e($skill['icon']); ?>" alt=""
+                     style="width:24px;height:24px;object-fit:contain;"
+                     onerror="this.style.display='none';">
+              <?php else: ?>
+                <span style="color:var(--ink-soft);font-size:0.8rem;">—</span>
+              <?php endif; ?>
+            </td>
             <td><?php echo e($skill['category']); ?></td>
             <td><?php echo e($skill['skill_name']); ?></td>
             <td><?php echo e($skill['category_order']); ?> / <?php echo e($skill['sort_order']); ?></td>
