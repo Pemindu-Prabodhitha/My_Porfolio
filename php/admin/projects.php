@@ -64,7 +64,8 @@ include __DIR__ . '/_header.php';
             <td><?php echo e($project['tags']); ?></td>
             <td>
               <?php if (!empty($project['live_url'])): ?>Live &nbsp;<?php endif; ?>
-              <?php if (!empty($project['github_url'])): ?>GitHub<?php endif; ?>
+              <?php if (!empty($project['github_url'])): ?>GitHub &nbsp;<?php endif; ?>
+              <?php if (!empty($project['presentation_path'])): ?>Presentation<?php endif; ?>
             </td>
             <td class="row-actions">
               <a href="project-edit.php?id=<?php echo (int) $project['id']; ?>">Edit</a>

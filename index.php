@@ -165,6 +165,7 @@ if ($pdo !== null) {
                 'image' => $row['image'],
                 'live' => $row['live_url'],
                 'github' => $row['github_url'],
+                'presentation' => $row['presentation_path'] ?? '',
             ];
         }
         $dataSource = 'database';
@@ -380,6 +381,11 @@ sort($allTags);
                 <a href="<?php echo e($project['github']); ?>" target="_blank" rel="noopener">Source Code →</a>
               <?php endif; ?>
             </div>
+            <div class="project-links">
+              <?php if (!empty($project['presentation'])): ?>
+                <a href="<?php echo e($project['presentation']); ?>" download>>> Download Presentation </a>
+              <?php endif; ?>
+              </div>
           </article>
         <?php endforeach; ?>
       <?php endif; ?>

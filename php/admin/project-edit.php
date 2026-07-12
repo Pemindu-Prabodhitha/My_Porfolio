@@ -13,6 +13,7 @@ $project = [
     'image' => '',
     'live_url' => '',
     'github_url' => '',
+    'presentation_path' => '',
     'sort_order' => 0,
 ];
 
@@ -52,6 +53,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $project['image'] = trim($_POST['image'] ?? '');
         $project['live_url'] = trim($_POST['live_url'] ?? '');
         $project['github_url'] = trim($_POST['github_url'] ?? '');
+        $project['presentation_path'] = trim($_POST['presentation_path'] ?? '');
         $project['sort_order'] = (int) ($_POST['sort_order'] ?? 0);
 
         if ($project['title'] === '' || strlen($project['title']) > 150) {
@@ -77,7 +79,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 if ($isEdit) {
                     $stmt = $pdo->prepare(
                         'UPDATE projects SET title=:title, description=:description, tags=:tags,
-                         image=:image, live_url=:live_url, github_url=:github_url, sort_order=:sort_order
+                         image=:image, live_url=:live_url, github_url=:github_url,
+                         presentation_path=:presentation_path, sort_order=:sort_order
                          WHERE id=:id'
                     );
                     $stmt->execute([
@@ -87,6 +90,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         ':image' => $project['image'],
                         ':live_url' => $project['live_url'] ?: null,
                         ':github_url' => $project['github_url'] ?: null,
+                        ':presentation_path' => $project['presentation_path'] ?: null,
                         ':sort_order' => $project['sort_order'],
                         ':id' => $id,
                     ]);
@@ -94,8 +98,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     exit;
                 } else {
                     $stmt = $pdo->prepare(
-                        'INSERT INTO projects (title, description, tags, image, live_url, github_url, sort_order)
-                         VALUES (:title, :description, :tags, :image, :live_url, :github_url, :sort_order)'
+                        'INSERT INTO projects (title, description, tags, image, live_url, github_url, presentation_path, sort_order)
+                         VALUES (:title, :description, :tags, :image, :live_url, :github_url, :presentation_path, :sort_order)'
                     );
                     $stmt->execute([
                         ':title' => $project['title'],
@@ -104,6 +108,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         ':image' => $project['image'],
                         ':live_url' => $project['live_url'] ?: null,
                         ':github_url' => $project['github_url'] ?: null,
+                        ':presentation_path' => $project['presentation_path'] ?: null,
                         ':sort_order' => $project['sort_order'],
                     ]);
                     header('Location: projects.php?flash=created');
@@ -164,6 +169,12 @@ include __DIR__ . '/_header.php';
   <div class="form-group">
     <label for="github_url">GitHub URL (optional)</label>
     <input type="url" id="github_url" name="github_url" value="<?php echo e($project['github_url']); ?>" placeholder="https://github.com/you/project">
+  </div>
+
+  <div class="form-group">
+    <label for="presentation_path">Presentation File Path (optional)</label>
+    <input type="text" id="presentation_path" name="presentation_path" value="<?php echo e($project['presentation_path'] ?? ''); ?>" placeholder="assets/presentations/my-project.pdf">
+    <p class="hint">Path relative to the site root. Upload the actual file (PDF/PPTX) into an assets folder separately — this just adds a "Download Presentation" button to the project card.</p>
   </div>
 
   <div class="form-group">
