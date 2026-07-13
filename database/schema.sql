@@ -35,6 +35,8 @@ CREATE TABLE IF NOT EXISTS projects (
   image VARCHAR(255) NOT NULL,       -- path to screenshot, e.g. assets/images/project-1.jpg
   live_url VARCHAR(255) DEFAULT NULL,
   github_url VARCHAR(255) DEFAULT NULL,
+  presentation_path VARCHAR(255) DEFAULT NULL,
+  video_path VARCHAR(255) DEFAULT NULL,
   sort_order INT DEFAULT 0,          -- lower numbers show first
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB;

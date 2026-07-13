@@ -14,6 +14,7 @@ $project = [
     'live_url' => '',
     'github_url' => '',
     'presentation_path' => '',
+    'video_path' => '',
     'sort_order' => 0,
 ];
 
@@ -44,7 +45,9 @@ if ($isEdit && $pdo !== null) {
 
 // Handle form submission
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    if (!verify_csrf($_POST['csrf_token'] ?? '')) {
+    if (empty($_POST) && empty($_FILES) && isset($_SERVER['CONTENT_LENGTH']) && $_SERVER['CONTENT_LENGTH'] > 0) {
+        $errors[] = 'The uploaded file is too large. Please upload a smaller video or increase your server limits.';
+    } elseif (!verify_csrf($_POST['csrf_token'] ?? '')) {
         $errors[] = 'Your session expired. Please try again.';
     } else {
         $project['title'] = trim($_POST['title'] ?? '');
@@ -74,13 +77,45 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
         }
 
+        // Handle video file upload
+        if (isset($_FILES['video_file']) && $_FILES['video_file']['error'] === UPLOAD_ERR_OK) {
+            $videoTmpPath = $_FILES['video_file']['tmp_name'];
+            $videoName = basename($_FILES['video_file']['name']);
+            // Generate a unique filename
+            $uniqueVideoName = time() . '_' . preg_replace('/[^a-zA-Z0-9.\-_]/', '', $videoName);
+            $uploadDir = __DIR__ . '/../../assets/videos/';
+            
+            if (!is_dir($uploadDir)) {
+                mkdir($uploadDir, 0755, true);
+            }
+            
+            $destination = $uploadDir . $uniqueVideoName;
+            if (move_uploaded_file($videoTmpPath, $destination)) {
+                $project['video_path'] = 'assets/videos/' . $uniqueVideoName;
+            } else {
+                $errors[] = 'Failed to upload video file.';
+            }
+        } else {
+            // keep the old video path if editing and no new file was uploaded
+            if ($isEdit && empty($errors)) {
+                $stmt = $pdo->prepare('SELECT video_path FROM projects WHERE id = :id');
+                $stmt->execute([':id' => $id]);
+                $oldData = $stmt->fetch();
+                if ($oldData && !empty($oldData['video_path'])) {
+                    $project['video_path'] = $oldData['video_path'];
+                }
+            } else {
+                $project['video_path'] = '';
+            }
+        }
+
         if (empty($errors) && $pdo !== null) {
             try {
                 if ($isEdit) {
                     $stmt = $pdo->prepare(
                         'UPDATE projects SET title=:title, description=:description, tags=:tags,
                          image=:image, live_url=:live_url, github_url=:github_url,
-                         presentation_path=:presentation_path, sort_order=:sort_order
+                         presentation_path=:presentation_path, video_path=:video_path, sort_order=:sort_order
                          WHERE id=:id'
                     );
                     $stmt->execute([
@@ -91,6 +126,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         ':live_url' => $project['live_url'] ?: null,
                         ':github_url' => $project['github_url'] ?: null,
                         ':presentation_path' => $project['presentation_path'] ?: null,
+                        ':video_path' => $project['video_path'] ?: null,
                         ':sort_order' => $project['sort_order'],
                         ':id' => $id,
                     ]);
@@ -98,8 +134,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     exit;
                 } else {
                     $stmt = $pdo->prepare(
-                        'INSERT INTO projects (title, description, tags, image, live_url, github_url, presentation_path, sort_order)
-                         VALUES (:title, :description, :tags, :image, :live_url, :github_url, :presentation_path, :sort_order)'
+                        'INSERT INTO projects (title, description, tags, image, live_url, github_url, presentation_path, video_path, sort_order)
+                         VALUES (:title, :description, :tags, :image, :live_url, :github_url, :presentation_path, :video_path, :sort_order)'
                     );
                     $stmt->execute([
                         ':title' => $project['title'],
@@ -109,6 +145,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         ':live_url' => $project['live_url'] ?: null,
                         ':github_url' => $project['github_url'] ?: null,
                         ':presentation_path' => $project['presentation_path'] ?: null,
+                        ':video_path' => $project['video_path'] ?: null,
                         ':sort_order' => $project['sort_order'],
                     ]);
                     header('Location: projects.php?flash=created');
@@ -136,7 +173,7 @@ include __DIR__ . '/_header.php';
   <div class="flash error"><?php echo e($err); ?></div>
 <?php endforeach; ?>
 
-<form method="post" class="admin-form">
+<form method="post" class="admin-form" enctype="multipart/form-data">
   <input type="hidden" name="csrf_token" value="<?php echo e(csrf_token()); ?>">
 
   <div class="form-group">
@@ -175,6 +212,15 @@ include __DIR__ . '/_header.php';
     <label for="presentation_path">Presentation File Path (optional)</label>
     <input type="text" id="presentation_path" name="presentation_path" value="<?php echo e($project['presentation_path'] ?? ''); ?>" placeholder="assets/presentations/my-project.pdf">
     <p class="hint">Path relative to the site root. Upload the actual file (PDF/PPTX) into an assets folder separately — this just adds a "Download Presentation" button to the project card.</p>
+  </div>
+
+  <div class="form-group">
+    <label for="video_file">Project Video File (optional)</label>
+    <input type="file" id="video_file" name="video_file" accept="video/*">
+    <p class="hint">Upload an MP4 or similar video. This makes the project card clickable to download the video on the homepage.</p>
+    <?php if (!empty($project['video_path'])): ?>
+      <p class="hint">Current video: <a href="../../<?php echo e($project['video_path']); ?>" target="_blank" style="color:var(--amber);text-decoration:underline;"><?php echo e(basename($project['video_path'])); ?></a></p>
+    <?php endif; ?>
   </div>
 
   <div class="form-group">
