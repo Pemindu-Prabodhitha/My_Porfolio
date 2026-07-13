@@ -1,0 +1,42 @@
+/* =========================================================
+   DARK MODE — kept minimal because style.css now uses
+   CSS variables that already default to the dark palette.
+   This file handles any remaining overrides.
+   ========================================================= */
+
+/* The default theme (no data-theme attr or data-theme="dark") is already
+   the dark Midnight Blueprint palette defined in style.css :root.
+   So dark mode is the DEFAULT — light mode overrides are in :root light. */
+
+/* Input fields on dark background */
+html:not([data-theme="light"]) input,
+html:not([data-theme="light"]) textarea,
+html:not([data-theme="light"]) select {
+  background-color: rgba(255, 255, 255, 0.04);
+  color: var(--ink);
+  border-color: var(--glass-border);
+}
+
+html:not([data-theme="light"]) input::placeholder,
+html:not([data-theme="light"]) textarea::placeholder {
+  color: var(--ink-muted);
+}
+
+/* Light mode form inputs */
+html[data-theme="light"] input,
+html[data-theme="light"] textarea,
+html[data-theme="light"] select {
+  background-color: #ffffff;
+  color: var(--ink);
+  border-color: rgba(0,0,0,0.12);
+}
+
+html[data-theme="light"] input::placeholder,
+html[data-theme="light"] textarea::placeholder {
+  color: var(--ink-muted);
+}
+
+/* Smooth theme transitions */
+html {
+  transition: background-color 0.3s ease, color 0.3s ease;
+}

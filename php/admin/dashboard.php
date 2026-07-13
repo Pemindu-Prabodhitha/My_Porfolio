@@ -9,6 +9,7 @@ $skillsCount = 0;
 $messageCount = 0;
 $unreadCount = 0;
 $dbError = false;
+$darkMode = false;
 
 if ($pdo !== null) {
     try {
@@ -17,11 +18,33 @@ if ($pdo !== null) {
         $skillsCount = (int) $pdo->query('SELECT COUNT(*) FROM skills')->fetchColumn();
         $messageCount = (int) $pdo->query('SELECT COUNT(*) FROM contact_messages')->fetchColumn();
         $unreadCount = (int) $pdo->query('SELECT COUNT(*) FROM contact_messages WHERE is_read = 0')->fetchColumn();
+
+        $stmt = $pdo->prepare('SELECT content_value FROM site_content WHERE content_key = :k');
+        $stmt->execute([':k' => 'dark_mode']);
+        $darkMode = $stmt->fetchColumn() === '1';
     } catch (PDOException $e) {
         $dbError = true;
     }
 } else {
     $dbError = true;
+}
+
+// Toggle dark mode for the live site
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['toggle_dark_mode']) && $pdo !== null) {
+    if (verify_csrf($_POST['csrf_token'] ?? '')) {
+        $newValue = $darkMode ? '0' : '1';
+        try {
+            $stmt = $pdo->prepare(
+                'INSERT INTO site_content (content_key, content_value) VALUES (:k, :v)
+                 ON DUPLICATE KEY UPDATE content_value = :v2'
+            );
+            $stmt->execute([':k' => 'dark_mode', ':v' => $newValue, ':v2' => $newValue]);
+            header('Location: dashboard.php');
+            exit;
+        } catch (PDOException $e) {
+            error_log('Dark mode toggle failed: ' . $e->getMessage());
+        }
+    }
 }
 
 $pageTitle = 'Dashboard';
@@ -60,6 +83,20 @@ include __DIR__ . '/_header.php';
       <div class="stat-label">Unread Messages</div>
       <div class="stat-value"><?php echo $unreadCount; ?></div>
     </div>
+  </div>
+
+  <div class="stat-card" style="max-width:420px;margin-bottom:1.5rem;">
+    <div class="stat-label">Site Appearance</div>
+    <p style="margin:0.5rem 0 1rem;color:var(--ink-soft, #4a5259);font-size:0.9rem;">
+      Live site is currently in <strong><?php echo $darkMode ? 'Dark' : 'Light'; ?> Mode</strong>.
+    </p>
+    <form method="post">
+      <input type="hidden" name="csrf_token" value="<?php echo e(csrf_token()); ?>">
+      <input type="hidden" name="toggle_dark_mode" value="1">
+      <button type="submit" class="btn <?php echo $darkMode ? 'btn-outline' : 'btn-primary'; ?> btn-sm">
+        <?php echo $darkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode'; ?>
+      </button>
+    </form>
   </div>
 
   <p style="margin-bottom:1rem;">
