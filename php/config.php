@@ -22,7 +22,7 @@ define('CONTACT_LOG_FILE', __DIR__ . '/../data/contact-log.txt');
 // text-file log for contact messages - so nothing breaks while you're
 // setting the database up.
 define('DB_ENABLED', true);
-define('DB_HOST', 'localhost');
-define('DB_NAME', 'portfolio');
-define('DB_USER', 'root');
-define('DB_PASS', '');
+define('DB_HOST', 'sql306.infinityfree.com');
+define('DB_NAME', 'if0_42406162_portfolio');
+define('DB_USER', 'if0_42406162');
+define('DB_PASS', 'pRojport13');
