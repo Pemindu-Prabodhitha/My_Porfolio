@@ -424,9 +424,7 @@ $isDarkMode = ($siteContent['dark_mode'] ?? '0') === '1';
       <?php else: ?>
         <?php foreach ($projects as $index => $project): ?>
           <article class="project-card" data-tags="<?php echo e(implode(',', $project['tags'])); ?>">
-            <?php if (!empty($project['video_path'])): ?>
-            <a href="<?php echo e($project['video_path']); ?>" download style="text-decoration:none; color:inherit; display:block;">
-            <?php endif; ?>
+            <a href="https://youtube.com">
             <span class="project-spec">PROJECT_<?php echo str_pad($index + 1, 2, '0', STR_PAD_LEFT); ?></span>
             <div class="project-thumb">
               <img src="<?php echo e($project['image']); ?>" alt="<?php echo e($project['title']); ?> screenshot" loading="lazy">
@@ -460,9 +458,9 @@ $isDarkMode = ($siteContent['dark_mode'] ?? '0') === '1';
                 <?php endif; ?>
               </div>
             </div>
-            <?php if (!empty($project['video_path'])): ?>
+  
             </a>
-            <?php endif; ?>
+            
           </article>
         <?php endforeach; ?>
       <?php endif; ?>

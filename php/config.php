@@ -23,6 +23,6 @@ define('CONTACT_LOG_FILE', __DIR__ . '/../data/contact-log.txt');
 // setting the database up.
 define('DB_ENABLED', true);
 define('DB_HOST', 'sql306.infinityfree.com');
-define('DB_NAME', 'if0_42406162_portfolio');
+define('DB_NAME', 'portfolio');
 define('DB_USER', 'if0_42406162');
 define('DB_PASS', 'pRojport13');
