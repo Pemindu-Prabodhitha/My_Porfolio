@@ -313,7 +313,7 @@ $isDarkMode = ($siteContent['dark_mode'] ?? '0') === '1';
       <!-- Animated stat counters -->
       <div class="quick-stats">
         <div class="stat-card">
-          <span class="stat-number" data-target="3" data-suffix="+">3+</span>
+          <span class="stat-number" data-target="4" data-suffix="+">4+</span>
           <span class="stat-label">Projects</span>
         </div>
         <div class="stat-card">
