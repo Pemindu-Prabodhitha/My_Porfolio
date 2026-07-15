@@ -169,6 +169,7 @@ if ($pdo !== null) {
                 'github' => $row['github_url'],
                 'presentation' => $row['presentation_path'] ?? '',
                 'video_path' => $row['video_path'] ?? '',
+                'video' => $row['video_url'] ??'',
             ];
         }
         $dataSource = 'database';
@@ -424,7 +425,7 @@ $isDarkMode = ($siteContent['dark_mode'] ?? '0') === '1';
       <?php else: ?>
         <?php foreach ($projects as $index => $project): ?>
           <article class="project-card" data-tags="<?php echo e(implode(',', $project['tags'])); ?>">
-            <a href="https://youtube.com">
+            <a href="<?php echo e($project['video']); ?>">
             <span class="project-spec">PROJECT_<?php echo str_pad($index + 1, 2, '0', STR_PAD_LEFT); ?></span>
             <div class="project-thumb">
               <img src="<?php echo e($project['image']); ?>" alt="<?php echo e($project['title']); ?> screenshot" loading="lazy">

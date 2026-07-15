@@ -16,6 +16,7 @@ $project = [
     'presentation_path' => '',
     'video_path' => '',
     'sort_order' => 0,
+    'video_url' => '',
 ];
 
 $errors = [];
@@ -58,6 +59,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $project['github_url'] = trim($_POST['github_url'] ?? '');
         $project['presentation_path'] = trim($_POST['presentation_path'] ?? '');
         $project['sort_order'] = (int) ($_POST['sort_order'] ?? 0);
+        $project['video_url'] = trim($_POST['video_url'] ?? '');
 
         if ($project['title'] === '' || strlen($project['title']) > 150) {
             $errors[] = 'Title is required (max 150 characters).';
@@ -71,7 +73,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if ($project['image'] === '') {
             $errors[] = 'Image path is required (e.g. assets/images/my-project.jpg).';
         }
-        foreach (['live_url', 'github_url'] as $urlField) {
+        foreach (['live_url', 'github_url','video_url'] as $urlField) {
             if ($project[$urlField] !== '' && !filter_var($project[$urlField], FILTER_VALIDATE_URL)) {
                 $errors[] = ucfirst(str_replace('_', ' ', $urlField)) . ' must be a valid URL.';
             }
@@ -115,7 +117,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $stmt = $pdo->prepare(
                         'UPDATE projects SET title=:title, description=:description, tags=:tags,
                          image=:image, live_url=:live_url, github_url=:github_url,
-                         presentation_path=:presentation_path, video_path=:video_path, sort_order=:sort_order
+                         presentation_path=:presentation_path, video_path=:video_path, sort_order=:sort_order,video_url=:video_url
                          WHERE id=:id'
                     );
                     $stmt->execute([
@@ -129,13 +131,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         ':video_path' => $project['video_path'] ?: null,
                         ':sort_order' => $project['sort_order'],
                         ':id' => $id,
+                        ':video_url' => $project['video_url'] ?: null,
                     ]);
                     header('Location: projects.php?flash=updated');
                     exit;
                 } else {
                     $stmt = $pdo->prepare(
-                        'INSERT INTO projects (title, description, tags, image, live_url, github_url, presentation_path, video_path, sort_order)
-                         VALUES (:title, :description, :tags, :image, :live_url, :github_url, :presentation_path, :video_path, :sort_order)'
+                        'INSERT INTO projects (title, description, tags, image, live_url, github_url, presentation_path, video_path, sort_order,video_url)
+                         VALUES (:title, :description, :tags, :image, :live_url, :github_url, :presentation_path, :video_path, :sort_order,:video_url)'
                     );
                     $stmt->execute([
                         ':title' => $project['title'],
@@ -147,6 +150,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         ':presentation_path' => $project['presentation_path'] ?: null,
                         ':video_path' => $project['video_path'] ?: null,
                         ':sort_order' => $project['sort_order'],
+                        ':video_url' => $project['video_url'] ?: null,
                     ]);
                     header('Location: projects.php?flash=created');
                     exit;
@@ -206,6 +210,11 @@ include __DIR__ . '/_header.php';
   <div class="form-group">
     <label for="github_url">GitHub URL (optional)</label>
     <input type="url" id="github_url" name="github_url" value="<?php echo e($project['github_url']); ?>" placeholder="https://github.com/you/project">
+  </div>
+
+  <div class="form-group">
+    <label for="video_url">Video URL (optional)</label>
+    <input type="url" id="video_url" name="video_url" value="<?php echo e($project['video_url']); ?>" placeholder="https://video.com/you/project">
   </div>
 
   <div class="form-group">
